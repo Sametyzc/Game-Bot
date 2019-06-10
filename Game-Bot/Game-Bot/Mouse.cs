@@ -15,14 +15,9 @@ using System.Threading;
 namespace GUIControlling
 
 {
-
+    
     public abstract class Mouse
     {
-        [DllImport("user32.dll")]
-        static extern ushort GetAsyncKeyState(int vKey);
-
-        [DllImport("user32.dll")]
-        static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
         private const int VK_LBUTTON = 0x01;
         private const int MOUSEEVENTF_MOVE = 0x0001;
         private const int MOUSEEVENTF_LEFTDOWN = 0x0002;
@@ -33,16 +28,16 @@ namespace GUIControlling
         private const int MOUSEEVENTF_MIDDLEUP = 0x0040;
         private const int MOUSEEVENTF_ABSOLUTE = 0x8000;
 
-        public static bool Sol_TikaBasildiMi()
+        //Herhangi bir tuş basisini belirlemek icin.
+        [DllImport("user32.dll")]
+        static extern ushort GetAsyncKeyState(int vKey);
+        //Mouse ile kullanicinin yapabilecegi eylemleri yaptırmak icin.
+        [DllImport("user32.dll")]
+        static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
+
+        public static int Sol_TikaBasildiMi()
         {
-            bool basildiMi;
-            if (GetAsyncKeyState(VK_LBUTTON) == 0)
-                basildiMi = false;
-            else if (GetAsyncKeyState(VK_LBUTTON) == 1)
-                basildiMi = false;
-            else
-                basildiMi = true;
-            return basildiMi;
+            return GetAsyncKeyState(VK_LBUTTON);
         }
         public static void Sol_Tiklama(int x, int y)
         {
