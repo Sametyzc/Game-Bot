@@ -24,16 +24,16 @@ namespace Game_Bot
         {
             InitializeComponent();
             Label_Bilgilendirme.Text = "Fotoğraf çekilecek yeri seçiniz.";
-
         }
         private void ResimCekmekIcınTikla_Click(object sender, EventArgs e)
         {
+            ResimCekmekIcınTikla.Text = "Alanı Belirlemek için tıklayın.";
             ilkDeger_AtandiMi = false;
             calisma.FotografCekilecekMi = true;
             cF.Visible = false;
-            //Thread.Sleep(200);
             timer1.Start();
-            /*Bitmap OyunResmi = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            cF.Controls.Clear();
+           /* Bitmap OyunResmi = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             Graphics g = Graphics.FromImage(OyunResmi);
             g.CopyFromScreen(0, 0, 0, 0, OyunResmi.Size);*/
         }
@@ -41,7 +41,6 @@ namespace Game_Bot
         private void timer1_Tick(object sender, EventArgs e)
         {
 
-            //Label_Bilgilendirme.Text = "Durum : " + Mouse.Sol_TikaBasildiMi();
             if (calisma.FotografCekilecekMi)
             {
                 if ((Mouse.Sol_TikaBasildiMi() & 0x8000) != 0)
@@ -55,7 +54,7 @@ namespace Game_Bot
                     {
                         calisma.son_x = Cursor.Position.X;
                         calisma.son_y = Cursor.Position.Y;
-                        
+
                     }
                     ilkDeger_AtandiMi = true;
                     Label_Bilgilendirme.Text = "Bas_x : " + calisma.baslangic_x + "  Bas_y : " + calisma.baslangic_y
@@ -67,8 +66,12 @@ namespace Game_Bot
             if (ilkDeger_AtandiMi && Mouse.Sol_TikaBasildiMi() == 0)
             {
                 calisma.FotografCekilecekMi = false;
-                cF.Show();
+                ResimCekmekIcınTikla.Text = "Tekrar belirlemek için tıklayın.";
                 cF.Ciz(calisma.baslangic_x, calisma.baslangic_y, (calisma.son_x - calisma.baslangic_x), (calisma.son_y - calisma.baslangic_y));
+                cF.KabulButonuOlustur();
+                cF.Activate();
+                cF.Show();
+                timer1.Stop();
             }
         }
     }
