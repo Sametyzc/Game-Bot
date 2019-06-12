@@ -32,6 +32,9 @@
             this.ResimCekmekIcınTikla = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.Label_Bilgilendirme = new System.Windows.Forms.Label();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // ResimCekmekIcınTikla
@@ -59,15 +62,30 @@
             this.Label_Bilgilendirme.Size = new System.Drawing.Size(0, 18);
             this.Label_Bilgilendirme.TabIndex = 1;
             // 
+            // timer2
+            // 
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(185, 39);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(323, 150);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.Label_Bilgilendirme);
             this.Controls.Add(this.ResimCekmekIcınTikla);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -78,6 +96,8 @@
         private System.Windows.Forms.Button ResimCekmekIcınTikla;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label Label_Bilgilendirme;
+        private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

@@ -32,10 +32,10 @@ namespace Game_Bot
             calisma.FotografCekilecekMi = true;
             cF.Visible = false;
             timer1.Start();
+            timer2.Stop();
+            cF.fotoCekmeyeBasla = false;
             cF.Controls.Clear();
-           /* Bitmap OyunResmi = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-            Graphics g = Graphics.FromImage(OyunResmi);
-            g.CopyFromScreen(0, 0, 0, 0, OyunResmi.Size);*/
+
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -54,7 +54,6 @@ namespace Game_Bot
                     {
                         calisma.son_x = Cursor.Position.X;
                         calisma.son_y = Cursor.Position.Y;
-
                     }
                     ilkDeger_AtandiMi = true;
                     Label_Bilgilendirme.Text = "Bas_x : " + calisma.baslangic_x + "  Bas_y : " + calisma.baslangic_y
@@ -72,6 +71,18 @@ namespace Game_Bot
                 cF.Activate();
                 cF.Show();
                 timer1.Stop();
+                timer2.Start();
+            }
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            if (cF.fotoCekmeyeBasla)
+            {
+                Bitmap OyunResmi = new Bitmap(calisma.son_x - calisma.baslangic_x, calisma.son_y - calisma.baslangic_y);
+                Graphics g = Graphics.FromImage(OyunResmi);
+                g.CopyFromScreen(calisma.baslangic_x, calisma.baslangic_y, 0, 0, OyunResmi.Size);
+                pictureBox1.Image = OyunResmi;
             }
         }
     }

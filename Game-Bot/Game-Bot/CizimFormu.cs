@@ -15,6 +15,7 @@ namespace Game_Bot
     {
         Rectangle r;
         Point bolge;
+        public bool fotoCekmeyeBasla = false;
         public CizimFormu()
         {
             InitializeComponent();
@@ -37,23 +38,32 @@ namespace Game_Bot
         {
             //Point bolge = new Point(50, 50);
 
-
+            Button kabul_buton = new Button();
             Label kabul_label = new Label();
-            kabul_label.Location = new Point(bolge.X, bolge.Y-70);
+            if (bolge.Y - 70 < 0)
+            {
+                kabul_label.Location = new Point(bolge.X, bolge.Y + 10);
+                kabul_buton.Location = new Point(bolge.X, bolge.Y + 40);
+            }
+            else
+            {
+                kabul_label.Location = new Point(bolge.X, bolge.Y - 70);
+                kabul_buton.Location = new Point(bolge.X, bolge.Y - 40);
+            }
+
             kabul_label.Text = "Onaylamak için aşağıdaki butona basınız.Tekrar denemek için ilk bastığınız butona tıklayın.";
-            kabul_label.Font = new Font("Constantia", 15F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+            kabul_label.Font = new Font("Constantia", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
             kabul_label.Name = "Kabul_Buton";
             kabul_label.Width = 800;
             kabul_label.Height = 20;
             kabul_label.Visible = true;
             kabul_label.Visible = true;
-          //  kabul_label.BackColor = Color.Black;
+            //  kabul_label.BackColor = Color.Black;
 
-            Button kabul_buton = new Button();
+
             kabul_buton.Name = "Kabul_Buton";
             kabul_buton.Height = 40;
             kabul_buton.Width = 150;
-            kabul_buton.Location = new Point(bolge.X, bolge.Y-40);
             kabul_buton.Text = "Onaylamak için tıklayın.";
             kabul_buton.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(162)));
             kabul_buton.Visible = true;
@@ -64,8 +74,10 @@ namespace Game_Bot
         }
         private void kabul_buton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Fotoğaf çekmeye başlandı");
+            fotoCekmeyeBasla = true;
+            Controls.Clear();
         }
+        
         public void Ciz(int x, int y, int uzunluk, int genislik)
         {
             r = new Rectangle(x, y, uzunluk, genislik);
