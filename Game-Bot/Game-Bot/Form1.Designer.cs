@@ -34,6 +34,7 @@
             this.Label_Bilgilendirme = new System.Windows.Forms.Label();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.timer3 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -64,7 +65,7 @@
             // 
             // timer2
             // 
-            this.timer2.Interval = 300;
+            this.timer2.Interval = 400;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // pictureBox1
@@ -76,11 +77,16 @@
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
+            // timer3
+            // 
+            this.timer3.Interval = 50;
+            this.timer3.Tick += new System.EventHandler(this.timer3_Tick_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(437, 233);
+            this.ClientSize = new System.Drawing.Size(174, 168);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.Label_Bilgilendirme);
             this.Controls.Add(this.ResimCekmekIcınTikla);
@@ -99,6 +105,7 @@
         private System.Windows.Forms.Label Label_Bilgilendirme;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Timer timer3;
     }
 }
 

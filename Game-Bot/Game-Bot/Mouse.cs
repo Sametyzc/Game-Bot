@@ -15,7 +15,7 @@ using System.Threading;
 namespace GUIControlling
 
 {
-    
+
     public abstract class Mouse_
     {
         private const int VK_LBUTTON = 0x01;
@@ -39,11 +39,10 @@ namespace GUIControlling
         {
             return GetAsyncKeyState(VK_LBUTTON);
         }
-        public static void Sol_Tiklama(int x, int y)
+        public static void Sol_Tiklama()
         {
-
-            mouse_event(MOUSEEVENTF_LEFTDOWN, x, y, 0, 0);
-            mouse_event(MOUSEEVENTF_LEFTUP, x, y, 0, 0);
+            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
         }
         public static void Sag_Tiklama(int x, int y)
         {
