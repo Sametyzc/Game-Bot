@@ -64,6 +64,7 @@
             // 
             // timer2
             // 
+            this.timer2.Interval = 300;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // pictureBox1
@@ -79,7 +80,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(323, 150);
+            this.ClientSize = new System.Drawing.Size(437, 233);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.Label_Bilgilendirme);
             this.Controls.Add(this.ResimCekmekIcınTikla);

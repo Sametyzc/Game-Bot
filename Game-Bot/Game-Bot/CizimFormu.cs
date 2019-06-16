@@ -36,7 +36,6 @@ namespace Game_Bot
         }
         public void KabulButonuOlustur()
         {
-            //Point bolge = new Point(50, 50);
 
             Button kabul_buton = new Button();
             Label kabul_label = new Label();
@@ -58,7 +57,6 @@ namespace Game_Bot
             kabul_label.Height = 20;
             kabul_label.Visible = true;
             kabul_label.Visible = true;
-            //  kabul_label.BackColor = Color.Black;
 
 
             kabul_buton.Name = "Kabul_Buton";

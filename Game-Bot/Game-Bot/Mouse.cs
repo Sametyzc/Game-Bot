@@ -16,7 +16,7 @@ namespace GUIControlling
 
 {
     
-    public abstract class Mouse
+    public abstract class Mouse_
     {
         private const int VK_LBUTTON = 0x01;
         private const int MOUSEEVENTF_MOVE = 0x0001;
@@ -41,6 +41,7 @@ namespace GUIControlling
         }
         public static void Sol_Tiklama(int x, int y)
         {
+
             mouse_event(MOUSEEVENTF_LEFTDOWN, x, y, 0, 0);
             mouse_event(MOUSEEVENTF_LEFTUP, x, y, 0, 0);
         }

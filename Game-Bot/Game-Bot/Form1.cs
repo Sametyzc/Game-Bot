@@ -24,6 +24,7 @@ namespace Game_Bot
         {
             InitializeComponent();
             Label_Bilgilendirme.Text = "Fotoğraf çekilecek yeri seçiniz.";
+            this.TopMost = true;
         }
         private void ResimCekmekIcınTikla_Click(object sender, EventArgs e)
         {
@@ -43,7 +44,7 @@ namespace Game_Bot
 
             if (calisma.FotografCekilecekMi)
             {
-                if ((Mouse.Sol_TikaBasildiMi() & 0x8000) != 0)
+                if ((Mouse_.Sol_TikaBasildiMi() & 0x8000) != 0)
                 {
                     if (!ilkDeger_AtandiMi)
                     {
@@ -62,7 +63,7 @@ namespace Game_Bot
                 }
 
             }
-            if (ilkDeger_AtandiMi && Mouse.Sol_TikaBasildiMi() == 0)
+            if (ilkDeger_AtandiMi && Mouse_.Sol_TikaBasildiMi() == 0)
             {
                 calisma.FotografCekilecekMi = false;
                 ResimCekmekIcınTikla.Text = "Tekrar belirlemek için tıklayın.";
@@ -83,6 +84,16 @@ namespace Game_Bot
                 Graphics g = Graphics.FromImage(OyunResmi);
                 g.CopyFromScreen(calisma.baslangic_x, calisma.baslangic_y, 0, 0, OyunResmi.Size);
                 pictureBox1.Image = OyunResmi;
+                calisma.alaninResmi = OyunResmi;
+                if (calisma.Kutu_Bul())
+                {   
+                   // timer2.Stop();
+                    Cursor.Position = new Point(calisma.kutu_x, calisma.kutu_y);
+                   // Mouse_.Sol_Tiklama(calisma.kutu_x, calisma.kutu_y);
+                    Label_Bilgilendirme.Text = "Bulundu";
+                }
+                else
+                    Label_Bilgilendirme.Text = "Bulunamadı";
             }
         }
     }
