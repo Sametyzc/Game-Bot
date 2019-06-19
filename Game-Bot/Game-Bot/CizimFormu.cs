@@ -56,7 +56,6 @@ namespace Game_Bot
             kabul_label.Width = 800;
             kabul_label.Height = 20;
             kabul_label.Visible = true;
-            kabul_label.Visible = true;
 
 
             kabul_buton.Name = "Kabul_Buton";
@@ -67,19 +66,19 @@ namespace Game_Bot
             kabul_buton.Visible = true;
             kabul_buton.Click += new EventHandler(kabul_buton_Click);
             kabul_buton.BackColor = Color.Gray;
-            this.Controls.Add(kabul_label);
-            this.Controls.Add(kabul_buton);
+            Controls.Add(kabul_label);
+            Controls.Add(kabul_buton);
         }
         private void kabul_buton_Click(object sender, EventArgs e)
         {
             fotoCekmeyeBasla = true;
             Controls.Clear();
         }
-        
+
         public void Ciz(int x, int y, int uzunluk, int genislik)
         {
             r = new Rectangle(x, y, uzunluk, genislik);
-            PaintEventArgs e = new PaintEventArgs(this.CreateGraphics(), r);
+            PaintEventArgs e = new PaintEventArgs(CreateGraphics(), r);
             OnPaint(e);
             bolge = new Point(x, y);
         }

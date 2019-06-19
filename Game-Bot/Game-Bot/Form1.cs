@@ -16,16 +16,31 @@ namespace Game_Bot
 {
     public partial class Form1 : Form
     {
-        CizimFormu cF = new CizimFormu();
-        bool ilkDeger_AtandiMi = false;
+
         Calisma calisma = new Calisma();
+        CizimFormu cF = new CizimFormu();
 
+        static int ekran_genisligi = Screen.PrimaryScreen.Bounds.Width;
+        static int ekran_yuksekligi = Screen.PrimaryScreen.Bounds.Height;
+        bool ilkDeger_AtandiMi = false;
 
+        Point Tiklama_yeri;
+        Rectangle kesilecek_Bolge;
+        Bitmap OyunResmi;
+        Bitmap isaret;
+        Graphics g;
+
+        private int SureHesapla(int x_g, int y_g)
+        {
+            return (int)Math.Sqrt(Math.Pow(Math.Abs(y_g - (ekran_yuksekligi / 2)), 2) + Math.Pow(Math.Abs(x_g - (ekran_genisligi / 2)), 2)); ;
+        }
         public Form1()
         {
             InitializeComponent();
             Label_Bilgilendirme.Text = "Fotoğraf çekilecek yeri seçiniz.";
-            this.TopMost = true;
+            Tiklama_yeri = new Point();
+            // kesilecek_Bolge = new Rectangle(0, 0, 0, 0);
+            TopMost = true;
         }
         private void ResimCekmekIcınTikla_Click(object sender, EventArgs e)
         {
@@ -35,7 +50,6 @@ namespace Game_Bot
             cF.Visible = false;
             timer1.Start();
             timer2.Stop();
-            timer3.Stop();
             cF.fotoCekmeyeBasla = false;
             cF.Controls.Clear();
 
@@ -59,8 +73,6 @@ namespace Game_Bot
                         calisma.son_y = Cursor.Position.Y;
                     }
                     ilkDeger_AtandiMi = true;
-                    Label_Bilgilendirme.Text = "Bas_x : " + calisma.baslangic_x + "  Bas_y : " + calisma.baslangic_y
-                        + "  Son_x : " + calisma.son_x + "  son_y : " + calisma.son_y;
 
                 }
 
@@ -69,10 +81,14 @@ namespace Game_Bot
             {
                 calisma.FotografCekilecekMi = false;
                 ResimCekmekIcınTikla.Text = "Tekrar belirlemek için tıklayın.";
+
                 cF.Ciz(calisma.baslangic_x, calisma.baslangic_y, (calisma.son_x - calisma.baslangic_x), (calisma.son_y - calisma.baslangic_y));
                 cF.KabulButonuOlustur();
                 cF.Activate();
                 cF.Show();
+
+                OyunResmi = new Bitmap(Math.Abs(calisma.son_x - calisma.baslangic_x), Math.Abs(calisma.son_y - calisma.baslangic_y));
+                g = Graphics.FromImage(OyunResmi);
                 timer1.Stop();
                 timer2.Start();
             }
@@ -82,45 +98,35 @@ namespace Game_Bot
         {
             if (cF.fotoCekmeyeBasla)
             {
-                Bitmap OyunResmi = new Bitmap(calisma.son_x - calisma.baslangic_x, calisma.son_y - calisma.baslangic_y);
-                Graphics g = Graphics.FromImage(OyunResmi);
+
                 g.CopyFromScreen(calisma.baslangic_x, calisma.baslangic_y, 0, 0, OyunResmi.Size);
                 calisma.alaninResmi = OyunResmi;
+
+                if (!calisma.haritaVarMi)
+                {
+                    calisma.Harita_Bul();
+                    kesilecek_Bolge = new Rectangle(calisma.haritaYeri.X + calisma.haritaResmi.Width / 2 - 10, calisma.haritaYeri.Y - 20, 40, 20);
+
+                }
+                isaret = OyunResmi.Clone(kesilecek_Bolge, OyunResmi.PixelFormat);
                 if (calisma.Kutu_Bul())
                 {
-                    Cursor.Position = new Point(Screen.PrimaryScreen.Bounds.Width / 2 + 75, Screen.PrimaryScreen.Bounds.Height / 2);
+                    Tiklama_yeri.X = calisma.kutu_x;
+                    Tiklama_yeri.Y = calisma.kutu_y;
+                    Cursor.Position = Tiklama_yeri;
                     Mouse_.Sol_Tiklama();
-                    timer2.Stop();
-                    Label_Bilgilendirme.Text = "Bulundu";
-                    timer3.Start();
+                    Thread.Sleep(SureHesapla(calisma.kutu_x, calisma.kutu_y) * 3);
+
                 }
-                else
+                else if (calisma.haritaVarMi && !calisma.Isaret_Bul(isaret))
                 {
-                    Label_Bilgilendirme.Text = "Bulunamadı";
+                    pictureBox1.Image = isaret;
+                    Cursor.Position = calisma.Harita_Tiklama_Yeri();
+                    Mouse_.Sol_Tiklama();
+                    Thread.Sleep(2000);
                 }
 
-            }
-        }
 
-        private void timer3_Tick_1(object sender, EventArgs e)
-        {
-            if (calisma.kutuBulunduMu)
-            {
-                Thread.Sleep(1500);
-                timer3.Stop();
-                calisma.kutuBulunduMu = calisma.Kutu_Bul();
-                Cursor.Position = new Point(calisma.kutu_x, calisma.kutu_y);
-                Mouse_.Sol_Tiklama();
-                Thread.Sleep(1000);
-                calisma.kutuBulunduMu = false;
-                calisma.kutu_x = 0;
-                calisma.kutu_y = 0;
-                timer2.Start();
-            }
-            else
-            {
-                timer3.Stop();
-                timer2.Start();
             }
         }
     }
