@@ -108,7 +108,9 @@ namespace Game_Bot
                     kesilecek_Bolge = new Rectangle(calisma.haritaYeri.X + calisma.haritaResmi.Width / 2 - 10, calisma.haritaYeri.Y - 20, 40, 20);
 
                 }
+
                 isaret = OyunResmi.Clone(kesilecek_Bolge, OyunResmi.PixelFormat);
+
                 if (calisma.Kutu_Bul())
                 {
                     Tiklama_yeri.X = calisma.kutu_x;
@@ -120,8 +122,8 @@ namespace Game_Bot
                 }
                 else if (calisma.haritaVarMi && !calisma.Isaret_Bul(isaret))
                 {
-                    pictureBox1.Image = isaret;
-                    Cursor.Position = calisma.Harita_Tiklama_Yeri();
+                    Cursor.Position = calisma.Harita_Tiklama_Yeri(calisma.kutuBulunduMu);
+                    calisma.kutuBulunduMu = false;
                     Mouse_.Sol_Tiklama();
                     Thread.Sleep(2000);
                 }

@@ -11,13 +11,14 @@ namespace Game_Bot
 {
     class Calisma
     {
-        public bool FotografCekilecekMi, kutuBulunduMu,haritaVarMi;
+        public bool FotografCekilecekMi, kutuBulunduMu, haritaVarMi;
         public int baslangic_x;
         public int baslangic_y;
         public int son_x;
         public int son_y;
         public int kutu_x;
         public int kutu_y;
+        int sira;
         public Point haritaYeri;
         public Bitmap alaninResmi;
         public Bitmap kutuResmi;
@@ -27,6 +28,9 @@ namespace Game_Bot
         public Image<Bgr, byte> aranan;
         public Random r;
         public Point Tiklama_Yeri;
+
+
+
         ///////////////////////////////////////////////////
         public Calisma()
         {
@@ -40,12 +44,15 @@ namespace Game_Bot
             kutuBulunduMu = false;
             haritaVarMi = false;
             alaninResmi = null;
+            sira = 0;
             r = new Random();
             Tiklama_Yeri = new Point();
             kutuResmi = (Bitmap)Image.FromFile("Resimler/kutu1.png");
             haritaResmi = (Bitmap)Image.FromFile("Resimler/Harita.png");
             isaretResmi = (Bitmap)Image.FromFile("Resimler/isaret.png");
         }
+
+
         public bool Kutu_Bul()
         {
             kaynak = new Image<Bgr, byte>(alaninResmi);
@@ -65,8 +72,10 @@ namespace Game_Bot
                     return true;
                 }
             }
+
             return false;
         }
+
         public void Harita_Bul()
         {
             kaynak = new Image<Bgr, byte>(alaninResmi);
@@ -85,6 +94,7 @@ namespace Game_Bot
                 }
             }
         }
+
         public bool Isaret_Bul(Bitmap kaynak_gelen)
         {
             kaynak = new Image<Bgr, byte>(kaynak_gelen);
@@ -103,10 +113,54 @@ namespace Game_Bot
                 return false;
             }
         }
-        public Point Harita_Tiklama_Yeri()
+        public Point Harita_Tiklama_Yeri(bool Artirma_YapilsinMi)
         {
-            Tiklama_Yeri.X = haritaYeri.X + baslangic_x + r.Next(haritaResmi.Size.Width);
-            Tiklama_Yeri.Y = haritaYeri.Y + baslangic_y + r.Next(haritaResmi.Size.Height);
+
+            int x;
+            int y;
+
+            if (!Artirma_YapilsinMi)
+            {
+                sira++;
+                if (sira == 6)
+                    sira = 0;
+            }
+
+            if (sira == 0)
+            {
+                x = r.Next(30, haritaResmi.Size.Width / 4);
+                y = r.Next(10, haritaResmi.Size.Height / 5);
+
+            }
+            else if (sira == 1)
+            {
+                x = r.Next(haritaResmi.Size.Width * 4 / 5, haritaResmi.Size.Width - 10);
+                y = r.Next(5, haritaResmi.Size.Height / 5);
+
+            }
+            else if (sira == 2)
+            {
+                x = haritaResmi.Size.Width / 2 + r.Next(-10, 10);
+                y = haritaResmi.Size.Height / 2 + r.Next(-10, 10);
+            }
+            else if (sira == 3)
+            {
+                x = r.Next(haritaResmi.Size.Width * 3 / 4, haritaResmi.Size.Width - 30);
+                y = r.Next(haritaResmi.Size.Height * 4 / 5, haritaResmi.Size.Height - 10);
+            }
+            else if (sira == 4)
+            {
+                x = r.Next(5, haritaResmi.Size.Width / 5);
+                y = r.Next(haritaResmi.Size.Height * 4 / 5, haritaResmi.Size.Height - 10);
+            }
+            else
+            {
+                x = haritaResmi.Size.Width / 2 + r.Next(-10, 10);
+                y = haritaResmi.Size.Height / 2 + r.Next(-10, 10);
+            }
+
+            Tiklama_Yeri.X = haritaYeri.X + baslangic_x + x;
+            Tiklama_Yeri.Y = haritaYeri.Y + baslangic_y + y;
             return Tiklama_Yeri;
         }
     }
