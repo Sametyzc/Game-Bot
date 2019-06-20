@@ -23,6 +23,7 @@ namespace Game_Bot
         static int ekran_genisligi = Screen.PrimaryScreen.Bounds.Width;
         static int ekran_yuksekligi = Screen.PrimaryScreen.Bounds.Height;
         bool ilkDeger_AtandiMi = false;
+        int AvantajSayac;
 
         Point Tiklama_yeri;
         Rectangle kesilecek_Bolge;
@@ -113,6 +114,8 @@ namespace Game_Bot
 
                 if (calisma.Kutu_Bul())
                 {
+                    AvantajSayac++;
+                    textBox1.Text = AvantajSayac.ToString();
                     Tiklama_yeri.X = calisma.kutu_x;
                     Tiklama_yeri.Y = calisma.kutu_y;
                     Cursor.Position = Tiklama_yeri;
@@ -130,6 +133,12 @@ namespace Game_Bot
 
 
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            AvantajSayac = 0;
+            textBox1.Text = AvantajSayac.ToString();
         }
     }
 }
