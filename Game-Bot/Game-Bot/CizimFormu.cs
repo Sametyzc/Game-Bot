@@ -50,6 +50,8 @@ namespace Game_Bot
                 kabul_buton.Location = new Point(bolge.X, bolge.Y - 40);
             }
 
+            kabul_label.BackColor = Color.Black;
+            kabul_label.ForeColor = Color.White;
             kabul_label.Text = "Onaylamak için aşağıdaki butona basınız.Tekrar denemek için ilk bastığınız butona tıklayın.";
             kabul_label.Font = new Font("Constantia", 12F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
             kabul_label.Name = "Kabul_Buton";

@@ -1,18 +1,7 @@
-﻿using System;
+﻿using System.Runtime.InteropServices;
 
-using System.Collections.Generic;
 
-using System.Text;
-
-using System.Windows.Forms;
-
-using System.Runtime.InteropServices;
-
-using System.Drawing;
-
-using System.Threading;
-
-namespace GUIControlling
+namespace MouseControl
 
 {
     //
@@ -25,6 +14,7 @@ namespace GUIControlling
     {
         //Değişkene verilen isim ile ilgili olan hexadecimal kodlar
         private const int VK_LBUTTON = 0x01;
+        private const int VK_PKEY = 0x50;
         private const int MOUSEEVENTF_MOVE = 0x0001;
         private const int MOUSEEVENTF_LEFTDOWN = 0x0002;
         private const int MOUSEEVENTF_LEFTUP = 0x0004;
@@ -33,6 +23,7 @@ namespace GUIControlling
         private const int MOUSEEVENTF_MIDDLEDOWN = 0x0020;
         private const int MOUSEEVENTF_MIDDLEUP = 0x0040;
         private const int MOUSEEVENTF_ABSOLUTE = 0x8000;
+
 
         //Herhangi bir tuş basisini belirlemek icin.
         [DllImport("user32.dll")]
@@ -45,7 +36,11 @@ namespace GUIControlling
         //Mouse sol tıkına basılıp basılamdığını kontrol eder
         public static int Sol_TikaBasildiMi()
         {
-            return GetAsyncKeyState(VK_LBUTTON);
+            return (GetAsyncKeyState(VK_LBUTTON) & MOUSEEVENTF_ABSOLUTE);
+        }
+        public static int P_Basildimi()
+        {
+            return (GetAsyncKeyState(VK_PKEY) & MOUSEEVENTF_ABSOLUTE);
         }
 
         //Mousun olduğu konuma sol tıklama yapar
