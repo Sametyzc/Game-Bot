@@ -16,11 +16,12 @@ namespace Game_Bot
     public partial class Form1 : Form
     {
 
-        Calisma calisma = new Calisma(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height,576);
+        Calisma calisma = new Calisma(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, 576);
         CizimFormu cF = new CizimFormu();
 
         bool ilkDeger_AtandiMi = false;
         bool alan_BelirlenecekMi = false;
+        bool P_BasildiMi = false;
         int AvantajSayac;
 
 
@@ -98,23 +99,30 @@ namespace Game_Bot
         //Ekranın sürekli resmini çekip işleme işleminin yapıldığı timer
         private void timer2_Tick(object sender, EventArgs e)
         {
-            //Fotoğraf çekileceğini onaylamak için kullanılan butondan gelen kontrol 
-            if (cF.fotoCekmeyeBasla)
-            {
 
-                if(Mouse_.P_Basildimi() !=0)
+
+            if (!P_BasildiMi)
+            {
+                Label_Sure.Text = "Çalışma Süresi: " + calisma.Calisma_Suresi_Hesapla();
+
+                if (cF.fotoCekmeyeBasla)
                 {
-                    timer2.Stop();
+
+                    if (Mouse_.P_Basildimi() != 0)
+                    {
+                        P_BasildiMi = true;
+                    }
+                    else if (calisma.Kutu_Bul_Tikla())
+                    {
+                        AvantajSayac++;
+                        textBox1.Text = AvantajSayac.ToString();
+                    }
+                    else
+                    {
+                        calisma.Gemi_Hareketi_Yap();
+                    }
+
                 }
-                if(calisma.Kutu_Bul_Tikla())
-                {
-                    AvantajSayac++;
-                }
-                else
-                {
-                    calisma.Gemi_Hareketi_Yap();
-                }
-                
             }
         }
 

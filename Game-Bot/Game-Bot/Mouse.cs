@@ -40,7 +40,7 @@ namespace MouseControl
         }
         public static int P_Basildimi()
         {
-            return (GetAsyncKeyState(VK_PKEY) & MOUSEEVENTF_ABSOLUTE);
+            return (GetAsyncKeyState(VK_PKEY));
         }
 
         //Mousun olduğu konuma sol tıklama yapar

@@ -23,6 +23,10 @@ namespace Game_Bot
         private int son_y;
         private int sira;
         private int gemiHizi;
+        private int baglanmaSeferi;
+
+        private DateTime baslamaZamani;
+        private TimeSpan gecenSure;
 
         private Rectangle isaret_bolgesi;
 
@@ -40,10 +44,12 @@ namespace Game_Bot
         private Image<Bgr, byte> kutuResmi;
         private Image<Bgr, byte> haritaResmi;
         private Image<Bgr, byte> isaretResmi;
+        private Image<Bgr, byte> baglantiResmi;
 
         private Random random_sayi;
 
         ///////////////////////////////////////////////////
+        ///Property
         public bool KutuBulunduMu
         { get { return kutuBulunduMu; } }
         public bool HaritaVarMi
@@ -112,8 +118,11 @@ namespace Game_Bot
 
 
         ///////////////////////////////////////////////////
+
+        ///Construction
         public Calisma(int Ekran_Genisligi, int Ekran_Yuksekligi, int Gemi_Hizi)
         {
+
             baslangic_x = 0;
             baslangic_y = 0;
             son_x = 0;
@@ -125,98 +134,24 @@ namespace Game_Bot
             haritaVarMi = false;
             alaninResmi = null;
             sira = 0;
+            baglanmaSeferi = 0;
             random_sayi = new Random();
-
+            baslamaZamani = DateTime.Now;
             //Ekranda aranan nesneler dosyalardan çekildi
             kutuResmi = new Image<Bgr, byte>((Bitmap)Image.FromFile("Resimler/kutu1.png"));
             haritaResmi = new Image<Bgr, byte>((Bitmap)Image.FromFile("Resimler/Harita.png"));
             isaretResmi = new Image<Bgr, byte>((Bitmap)Image.FromFile("Resimler/isaret.png"));
+            baglantiResmi = new Image<Bgr, byte>((Bitmap)Image.FromFile("Resimler/baglanma.png"));
+
         }
 
+        //////////////////////////////////////////////////
         private int SureHesapla()
         {
             //iki nokta arasındaki uzaklık formulü
             return 200 + ((int)Math.Sqrt(Math.Pow(Math.Abs(kutuYeri.Y - (Ekran.Y / 2)), 2) + Math.Pow(Math.Abs(kutuYeri.X - (Ekran.X / 2)), 2))) * 1000 / (gemiHizi - 20);
         }
 
-        private void Sol_Tikla(Point TiklamaYeri)
-        {
-            //Mouse imleci tıklanacak yere hareket ettirilir
-            Cursor.Position = TiklamaYeri;
-            //imlecin o anki konumuna sol tıklama yapar
-            Mouse_.Sol_Tiklama();
-        }
-
-        public void Baslangıc_Degerlerini_Ata()
-        {
-            if (son_x < baslangic_x)
-            {
-                int temp = son_x;
-                son_x = baslangic_x;
-                baslangic_x = temp;
-            }
-            if (son_y < baslangic_y)
-            {
-                int temp = son_y;
-                son_y = baslangic_y;
-                baslangic_y = temp;
-            }
-
-            alaninResmi = new Bitmap(son_x - baslangic_x, son_y - baslangic_y);
-            graphics_resim = Graphics.FromImage(alaninResmi);
-
-            Alanin_Resmini_Cek();
-            Harita_Bul();
-            isaret_bolgesi = new Rectangle(haritaYeri.X + haritaResmi.Width / 2 - 20, haritaYeri.Y - 25, 25, 20);
-
-        }
-
-        public void Alanin_Resmini_Cek()
-        {
-            graphics_resim.CopyFromScreen(baslangic_x, baslangic_y, 0, 0, alaninResmi.Size);
-            kaynak = new Image<Bgr, byte>(alaninResmi);
-        }
-
-        public void Isaretin_Resmini_Cek()
-        {
-            kesilenIsaret = alaninResmi.Clone(isaret_bolgesi, alaninResmi.PixelFormat);
-        }
-
-        public void Harita_Bul()
-        {
-            using (Image<Gray, float> sonuc = kaynak.MatchTemplate(haritaResmi, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed))
-            {
-                double[] minValues, maxValues;
-                Point[] minLocations, maxLocations;
-                sonuc.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
-
-                if (maxValues[0] > 0.3)
-                {
-                    haritaVarMi = true;
-                    //Haritanın yeri alınır
-                    haritaYeri = new Point(maxLocations[0].X, maxLocations[0].Y);
-                }
-            }
-        }
-
-        public bool Isaret_Bul()
-        {
-            kaynak = new Image<Bgr, byte>(kesilenIsaret);
-
-            using (Image<Gray, float> sonuc = kaynak.MatchTemplate(isaretResmi, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed))
-            {
-                double[] minValues, maxValues;
-                Point[] minLocations, maxLocations;
-                sonuc.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
-
-                if (maxValues[0] > 0.3)
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
-        //Belli bir periyotta haritada gezinmesi için
         private Point Harita_Tiklama_Yeri(bool Artirma_YapilsinMi)
         {
             //Bu parametrenin alınma sebebi ise eğer ekranda bir kutu varsa gemi onu aldıktan sonra hareketsiz kalacağı için sıradaki konuma tıklamya çalışacak
@@ -276,9 +211,120 @@ namespace Game_Bot
             return haritaTiklamaYeri;
         }
 
+        private void Sol_Tikla(Point TiklamaYeri)
+        {
+
+            //Mouse imleci tıklanacak yere hareket ettirilir
+            Cursor.Position = TiklamaYeri;
+            //imlecin o anki konumuna sol tıklama yapar
+            Mouse_.Sol_Tiklama();
+        }
+
+        private bool Isaret_Bul()
+        {
+            kaynak = new Image<Bgr, byte>(kesilenIsaret);
+
+            using (Image<Gray, float> sonuc = kaynak.MatchTemplate(isaretResmi, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed))
+            {
+                double[] minValues, maxValues;
+                Point[] minLocations, maxLocations;
+                sonuc.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+
+                if (maxValues[0] > 0.3)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        private void Baglanma_Isaret_Bul_Tikla()
+        {
+            Alanin_Resmini_Cek();
+            using (Image<Gray, float> sonuc = kaynak.MatchTemplate(baglantiResmi, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed))
+            {
+                double[] minValues, maxValues;
+                Point[] minLocations, maxLocations;
+                sonuc.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+
+                if (maxValues[0] > 0.5)
+                {
+                    haritaTiklamaYeri.X = baglantiResmi.Size.Width / 2 + maxLocations[0].X + baslangic_x;
+                    haritaTiklamaYeri.Y = baglantiResmi.Size.Height / 2 + maxLocations[0].Y + baslangic_y;
+                    Sol_Tikla(haritaTiklamaYeri);
+                    baglanmaSeferi = 0;
+                    Thread.Sleep(10000);
+                }
+            }
+        }
+
+        private void Isaretin_Resmini_Cek()
+        {
+            kesilenIsaret = alaninResmi.Clone(isaret_bolgesi, alaninResmi.PixelFormat);
+        }
+
+        private void Alanin_Resmini_Cek()
+        {
+            graphics_resim.CopyFromScreen(baslangic_x, baslangic_y, 0, 0, alaninResmi.Size);
+            kaynak = new Image<Bgr, byte>(alaninResmi);
+        }
+
+        private void Harita_Bul()
+        {
+            using (Image<Gray, float> sonuc = kaynak.MatchTemplate(haritaResmi, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed))
+            {
+                double[] minValues, maxValues;
+                Point[] minLocations, maxLocations;
+                sonuc.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+
+                if (maxValues[0] > 0.3)
+                {
+                    haritaVarMi = true;
+                    //Haritanın yeri alınır
+                    haritaYeri = new Point(maxLocations[0].X, maxLocations[0].Y);
+                }
+            }
+        }
+
+        public string Calisma_Suresi_Hesapla()
+        {
+            gecenSure = baslamaZamani - DateTime.Now;
+            return gecenSure.ToString("hh':'mm':'ss");
+        }
+
+        public void Baslangıc_Degerlerini_Ata()
+        {
+            if (son_x < baslangic_x)
+            {
+                int temp = son_x;
+                son_x = baslangic_x;
+                baslangic_x = temp;
+            }
+            if (son_y < baslangic_y)
+            {
+                int temp = son_y;
+                son_y = baslangic_y;
+                baslangic_y = temp;
+            }
+
+            alaninResmi = new Bitmap(son_x - baslangic_x, son_y - baslangic_y);
+            graphics_resim = Graphics.FromImage(alaninResmi);
+
+            Alanin_Resmini_Cek();
+            Harita_Bul();
+            isaret_bolgesi = new Rectangle(haritaYeri.X + haritaResmi.Width / 2 - 20, haritaYeri.Y - 25, 25, 20);
+
+        }
+
         public bool Kutu_Bul_Tikla()
         {
             Alanin_Resmini_Cek();
+            if (baglanmaSeferi >= 50)
+            {
+                Thread.Sleep(100000);
+                Baglanma_Isaret_Bul_Tikla();
+            }
+            baglanmaSeferi++;
             using (Image<Gray, float> sonuc = kaynak.MatchTemplate(kutuResmi, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed))
             {
                 //Buradaki min ve max arasında ne fark var bilmiyorum ama max kullanınca sorun olmuyor
@@ -291,11 +337,25 @@ namespace Game_Bot
                 {
                     //Buraya gelindiyse aranan nesnemize benzeyen bir nesne bulunmuş demektir
                     kutuBulunduMu = true;
+                    if (kutuYeri.X >= maxLocations[0].X + baslangic_x &&
+                        kutuYeri.X <= kutuResmi.Size.Width + maxLocations[0].X + baslangic_x &&
+                        kutuYeri.Y >= maxLocations[0].Y + baslangic_y &&
+                        kutuYeri.Y <= kutuResmi.Size.Height + maxLocations[0].Y + baslangic_y
+                        )
+                    {
+                        baglanmaSeferi++;
+                    }
+                    else
+                    {
+                        baglanmaSeferi = 0;
+                    }
+
                     //Kordinatarı alınır
                     //Bunlara baslangic_x degerlerinin eklenme sebebi bulunan nesnenin kordinatlarının bizim resmini çektiğimiz alana göre olması
                     //Buna ekrana göre referans almak için alanın baslangıcının eklenmesi gerek.
                     kutuYeri.X = kutuResmi.Size.Width / 2 + maxLocations[0].X + baslangic_x;
                     kutuYeri.Y = kutuResmi.Size.Height / 2 + maxLocations[0].Y + baslangic_y;
+
                     Sol_Tikla(kutuYeri);
                     //Kutunun uzaklığına oranla artacak şekilde  bekleme yapar 
                     //Bu sure kutuya gidiş suresi ve kutunun alınma suresi toplamlarıdır
@@ -315,7 +375,17 @@ namespace Game_Bot
                 Sol_Tikla(Harita_Tiklama_Yeri(kutuBulunduMu));
                 //Eger buraya geldiysek resim içerisinde kutu yok demektir o yüzden bunu false yaptık
                 kutuBulunduMu = false;
+                if (baglanmaSeferi >= 50)
+                {
+                    Thread.Sleep(100000);
+                    Baglanma_Isaret_Bul_Tikla();
+                }
+                baglanmaSeferi++;
                 Thread.Sleep(500);
+            }
+            else
+            {
+                baglanmaSeferi = 0;
             }
         }
 
