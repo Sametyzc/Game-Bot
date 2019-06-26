@@ -16,8 +16,8 @@ namespace Game_Bot
     public partial class Form1 : Form
     {
 
-        Calisma calisma = new Calisma(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, 576);
-        CizimFormu cF = new CizimFormu();
+        static Calisma calisma = new Calisma(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, 576);
+        CizimFormu cF = new CizimFormu(calisma);
 
         bool ilkDeger_AtandiMi = false;
         bool alan_BelirlenecekMi = false;
@@ -46,7 +46,7 @@ namespace Game_Bot
             timer2.Stop();
             cF.fotoCekmeyeBasla = false;
             cF.Controls.Clear();
-
+            P_BasildiMi = false;
         }
 
         //Alan belirlemekte kullanılan timer
@@ -74,7 +74,6 @@ namespace Game_Bot
                     }
                     //Timer ilk defa çalıştıysa ilk kordinatları almak için bu gerekli
                     ilkDeger_AtandiMi = true;
-
                 }
 
             }
@@ -84,8 +83,7 @@ namespace Game_Bot
                 alan_BelirlenecekMi = false;
                 ResimCekmekIcınTikla.Text = "Tekrar belirlemek için tıklayın.";
 
-                //Resmin çekileceği bitmap oluşturulup hazırlanır.
-                calisma.Baslangıc_Degerlerini_Ata();
+
                 //Cizim formundan belirlenen alana bir şekil çizilip alan belirtilir
                 cF.Ciz(calisma.Baslangic_x, calisma.Baslangic_y, (calisma.Son_x - calisma.Baslangic_x), (calisma.Son_y - calisma.Baslangic_y));
                 cF.KabulButonuOlustur();
@@ -99,14 +97,13 @@ namespace Game_Bot
         //Ekranın sürekli resmini çekip işleme işleminin yapıldığı timer
         private void timer2_Tick(object sender, EventArgs e)
         {
-
-
-            if (!P_BasildiMi)
+            if (cF.fotoCekmeyeBasla)
             {
-                Label_Sure.Text = "Çalışma Süresi: " + calisma.Calisma_Suresi_Hesapla();
-
-                if (cF.fotoCekmeyeBasla)
+                pictureBox1.Image = calisma.Isaretin_Resmini_Cek();
+                if (!P_BasildiMi)
                 {
+                    Label_Sure.Text = "Çalışma Süresi: " + calisma.Calisma_Suresi_Hesapla();
+                    Label_Bilgi.Text = "Baslatmak için P tuşuna Basınız";
 
                     if (Mouse_.P_Basildimi() != 0)
                     {
@@ -121,7 +118,14 @@ namespace Game_Bot
                     {
                         calisma.Gemi_Hareketi_Yap();
                     }
-
+                }
+                else
+                {
+                    Label_Bilgi.Text = "Baslatmak için P tuşuna Basınız";
+                    if (Mouse_.P_Basildimi() != 0)
+                    {
+                        P_BasildiMi = false;
+                    }
                 }
             }
         }

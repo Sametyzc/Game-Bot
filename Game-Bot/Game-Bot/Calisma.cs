@@ -1,18 +1,14 @@
 ﻿using Emgu.CV;
 using Emgu.CV.Structure;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MouseControl;
 using System.Threading;
 
 namespace Game_Bot
 {
-    class Calisma
+    public class Calisma
     {
         private bool kutuBulunduMu;
         private bool haritaVarMi;
@@ -149,7 +145,7 @@ namespace Game_Bot
         private int SureHesapla()
         {
             //iki nokta arasındaki uzaklık formulü
-            return 200 + ((int)Math.Sqrt(Math.Pow(Math.Abs(kutuYeri.Y - (Ekran.Y / 2)), 2) + Math.Pow(Math.Abs(kutuYeri.X - (Ekran.X / 2)), 2))) * 1000 / (gemiHizi - 20);
+            return 175 + ((int)Math.Sqrt(Math.Pow(Math.Abs(kutuYeri.Y - (Ekran.Y / 2)), 2) + Math.Pow(Math.Abs(kutuYeri.X - (Ekran.X / 2)), 2))) * 1000 / (gemiHizi - 30);
         }
 
         private Point Harita_Tiklama_Yeri(bool Artirma_YapilsinMi)
@@ -249,18 +245,24 @@ namespace Game_Bot
 
                 if (maxValues[0] > 0.5)
                 {
+                    Thread.Sleep(100000);
                     haritaTiklamaYeri.X = baglantiResmi.Size.Width / 2 + maxLocations[0].X + baslangic_x;
                     haritaTiklamaYeri.Y = baglantiResmi.Size.Height / 2 + maxLocations[0].Y + baslangic_y;
                     Sol_Tikla(haritaTiklamaYeri);
                     baglanmaSeferi = 0;
                     Thread.Sleep(10000);
+
+                }
+                else
+                {
+                    Application.Exit();
                 }
             }
         }
 
-        private void Isaretin_Resmini_Cek()
+        public Bitmap Isaretin_Resmini_Cek()
         {
-            kesilenIsaret = alaninResmi.Clone(isaret_bolgesi, alaninResmi.PixelFormat);
+            return kesilenIsaret = alaninResmi.Clone(isaret_bolgesi, alaninResmi.PixelFormat);
         }
 
         private void Alanin_Resmini_Cek()
@@ -292,7 +294,7 @@ namespace Game_Bot
             return gecenSure.ToString("hh':'mm':'ss");
         }
 
-        public void Baslangıc_Degerlerini_Ata()
+        public void Baslangic_Degerlerini_Ata()
         {
             if (son_x < baslangic_x)
             {
@@ -312,7 +314,7 @@ namespace Game_Bot
 
             Alanin_Resmini_Cek();
             Harita_Bul();
-            isaret_bolgesi = new Rectangle(haritaYeri.X + haritaResmi.Width / 2 - 20, haritaYeri.Y - 25, 25, 20);
+            isaret_bolgesi = new Rectangle(haritaYeri.X + haritaResmi.Width / 2 - 20, haritaYeri.Y - 25, 30, 25);
 
         }
 
@@ -321,7 +323,6 @@ namespace Game_Bot
             Alanin_Resmini_Cek();
             if (baglanmaSeferi >= 50)
             {
-                Thread.Sleep(100000);
                 Baglanma_Isaret_Bul_Tikla();
             }
             baglanmaSeferi++;
@@ -377,7 +378,6 @@ namespace Game_Bot
                 kutuBulunduMu = false;
                 if (baglanmaSeferi >= 50)
                 {
-                    Thread.Sleep(100000);
                     Baglanma_Isaret_Bul_Tikla();
                 }
                 baglanmaSeferi++;

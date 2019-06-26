@@ -39,7 +39,9 @@
             this.Label_Bilgi = new System.Windows.Forms.Label();
             this.Label_Sure = new System.Windows.Forms.Label();
             this.Label_Bilgilendirme = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // ResimCekmekIcınTikla
@@ -123,11 +125,21 @@
             this.Label_Bilgilendirme.Size = new System.Drawing.Size(0, 13);
             this.Label_Bilgilendirme.TabIndex = 9;
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Location = new System.Drawing.Point(16, 157);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox2.TabIndex = 10;
+            this.pictureBox2.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(193, 163);
+            this.ClientSize = new System.Drawing.Size(193, 349);
+            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.Label_Bilgilendirme);
             this.Controls.Add(this.Label_Sure);
             this.Controls.Add(this.Label_Bilgi);
@@ -137,8 +149,9 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.ResimCekmekIcınTikla);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Game-Bot";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -156,6 +169,7 @@
         private System.Windows.Forms.Label Label_Bilgi;
         private System.Windows.Forms.Label Label_Sure;
         private System.Windows.Forms.Label Label_Bilgilendirme;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }
 

@@ -13,11 +13,13 @@ namespace Game_Bot
 {
     public partial class CizimFormu : Form
     {
+        Calisma calisma;
         Rectangle r;
         Point bolge;
         public bool fotoCekmeyeBasla = false;
-        public CizimFormu()
+        public CizimFormu(Calisma x)
         {
+            calisma = x;
             InitializeComponent();
             this.TopMost = true;
             this.DoubleBuffered = true;
@@ -73,6 +75,8 @@ namespace Game_Bot
         }
         private void kabul_buton_Click(object sender, EventArgs e)
         {
+            //Resmin çekileceği bitmap oluşturulup hazırlanır.
+            calisma.Baslangic_Degerlerini_Ata();
             fotoCekmeyeBasla = true;
             Controls.Clear();
         }
