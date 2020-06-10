@@ -32,7 +32,7 @@ namespace Game_Bot
         protected override void OnPaint(PaintEventArgs e)
         {
             float[] cizgiAraliklari = { 5, 5 };
-            Pen pen = new Pen(Color.Red, 1);
+            Pen pen = new Pen(Color.Blue, 1);
             pen.DashPattern = cizgiAraliklari;
             e.Graphics.DrawRectangle(pen, r);
         }

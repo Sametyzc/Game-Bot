@@ -20,11 +20,13 @@ namespace Game_Bot
         private int sira;
         private int gemiHizi;
         private int baglanmaSeferi;
+        private int dusmanSayisi;
 
         private DateTime baslamaZamani;
         private TimeSpan gecenSure;
 
         private Rectangle isaret_bolgesi;
+        private Rectangle harita_bolgesi;
 
         private Graphics graphics_resim;
 
@@ -32,15 +34,20 @@ namespace Game_Bot
         private Point kutuYeri;
         private Point Ekran;
         private Point haritaTiklamaYeri;
+        private Point dusmanYeri;
+        private Point gemiYeri;
 
         private Bitmap alaninResmi;
         private Bitmap kesilenIsaret;
+
+        private Color dusmanRengi;
 
         private Image<Bgr, byte> kaynak;
         private Image<Bgr, byte> kutuResmi;
         private Image<Bgr, byte> haritaResmi;
         private Image<Bgr, byte> isaretResmi;
         private Image<Bgr, byte> baglantiResmi;
+        private Image<Bgr, byte> gemiResmi;
 
         private Random random_sayi;
 
@@ -53,6 +60,10 @@ namespace Game_Bot
             get { return haritaVarMi; }
         }
 
+        public int DusmanSayisi
+        {
+            get { return dusmanSayisi; }
+        }
         public int Baslangic_x
         {
             get { return baslangic_x; }
@@ -119,6 +130,7 @@ namespace Game_Bot
         public Calisma(int Ekran_Genisligi, int Ekran_Yuksekligi, int Gemi_Hizi)
         {
 
+            dusmanSayisi = 0;
             baslangic_x = 0;
             baslangic_y = 0;
             son_x = 0;
@@ -133,11 +145,13 @@ namespace Game_Bot
             baglanmaSeferi = 0;
             random_sayi = new Random();
             baslamaZamani = DateTime.Now;
+            dusmanRengi = Color.FromArgb(204, 0, 0);
             //Ekranda aranan nesneler dosyalardan çekildi
             kutuResmi = new Image<Bgr, byte>((Bitmap)Image.FromFile("Resimler/kutu1.png"));
             haritaResmi = new Image<Bgr, byte>((Bitmap)Image.FromFile("Resimler/Harita.png"));
             isaretResmi = new Image<Bgr, byte>((Bitmap)Image.FromFile("Resimler/isaret.png"));
             baglantiResmi = new Image<Bgr, byte>((Bitmap)Image.FromFile("Resimler/baglanma.png"));
+            gemiResmi = new Image<Bgr, byte>((Bitmap)Image.FromFile("Resimler/Gemi.png"));
 
         }
 
@@ -145,7 +159,7 @@ namespace Game_Bot
         private int SureHesapla()
         {
             //iki nokta arasındaki uzaklık formulü
-            return 175 + ((int)Math.Sqrt(Math.Pow(Math.Abs(kutuYeri.Y - (Ekran.Y / 2)), 2) + Math.Pow(Math.Abs(kutuYeri.X - (Ekran.X / 2)), 2))) * 1000 / (gemiHizi - 30);
+            return 175 + ((int)Math.Sqrt(Math.Pow(Math.Abs(kutuYeri.Y - (Ekran.Y / 2)), 2) + Math.Pow(Math.Abs(kutuYeri.X - (Ekran.X / 2)), 2))) * 1000 / (gemiHizi - 50);
         }
 
         private Point Harita_Tiklama_Yeri(bool Artirma_YapilsinMi)
@@ -314,7 +328,8 @@ namespace Game_Bot
 
             Alanin_Resmini_Cek();
             Harita_Bul();
-            isaret_bolgesi = new Rectangle(haritaYeri.X + haritaResmi.Width / 2 - 20, haritaYeri.Y - 25, 30, 25);
+            isaret_bolgesi = new Rectangle(haritaYeri.X + haritaResmi.Width / 2 - 20, haritaYeri.Y - 50, 30, 50);
+            harita_bolgesi = new Rectangle(haritaYeri.X, haritaYeri.Y, haritaResmi.Width, haritaResmi.Height);
 
         }
 
@@ -333,15 +348,17 @@ namespace Game_Bot
                 Point[] minLocations, maxLocations;
                 sonuc.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
                 //Bunların dizi olmasının sebebi aranan nesneden resim içinde birden fazla olabileceği için
-                //Buradaki 0.8 benzerlik katsayısı eğer 1 yapsaydık aranan resminin aynısını tıpkısını bulmayqa çalışırdı
+                //Buradaki 0.8 benzerlik katsayısı eğer 1 yapsaydık aranan resminin aynısını tıpkısını bulmaya çalışırdı
                 if (maxValues[0] > 0.8)
                 {
                     //Buraya gelindiyse aranan nesnemize benzeyen bir nesne bulunmuş demektir
                     kutuBulunduMu = true;
-                    if (kutuYeri.X >= maxLocations[0].X + baslangic_x &&
-                        kutuYeri.X <= kutuResmi.Size.Width + maxLocations[0].X + baslangic_x &&
-                        kutuYeri.Y >= maxLocations[0].Y + baslangic_y &&
-                        kutuYeri.Y <= kutuResmi.Size.Height + maxLocations[0].Y + baslangic_y
+                    if
+                        (
+                            kutuYeri.X >= maxLocations[0].X + baslangic_x &&
+                            kutuYeri.X <= kutuResmi.Size.Width + maxLocations[0].X + baslangic_x &&
+                            kutuYeri.Y >= maxLocations[0].Y + baslangic_y &&
+                            kutuYeri.Y <= kutuResmi.Size.Height + maxLocations[0].Y + baslangic_y
                         )
                     {
                         baglanmaSeferi++;
@@ -387,6 +404,43 @@ namespace Game_Bot
             {
                 baglanmaSeferi = 0;
             }
+        }
+
+        private void Haritada_Dusman_Bul(int x, int y)
+        {
+            gemiYeri.X = x;
+            gemiYeri.Y = y;
+            for (; y < gemiResmi.Height; y++)
+            {
+                for (; x < gemiResmi.Width; x++)
+                {
+                    Color simdiki = alaninResmi.GetPixel(x, y);
+                    if (simdiki == dusmanRengi)
+                    {
+                        Sol_Tikla(new Point((x - gemiYeri.X) * (Ekran.X / gemiResmi.Width), (y - gemiYeri.Y) * (Ekran.Y / gemiResmi.Height)));
+                        return;
+                    }
+                }
+            }
+        }
+
+        public bool Haritada_Gemi_Bul()
+        {
+            Alanin_Resmini_Cek();
+            kaynak = new Image<Bgr, byte>(alaninResmi.Clone(harita_bolgesi, alaninResmi.PixelFormat));
+            using (Image<Gray, float> sonuc = kaynak.MatchTemplate(gemiResmi, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed))
+            {
+                double[] minValues, maxValues;
+                Point[] minLocations, maxLocations;
+                sonuc.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+
+                if (maxValues[0] > 0.3)
+                {
+                    Haritada_Dusman_Bul(maxLocations[0].X, maxLocations[0].Y);
+                    return true;
+                }
+            }
+            return false;
         }
 
     }

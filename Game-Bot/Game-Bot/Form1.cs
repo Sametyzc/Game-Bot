@@ -16,7 +16,7 @@ namespace Game_Bot
     public partial class Form1 : Form
     {
 
-        static Calisma calisma = new Calisma(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, 576);
+        static Calisma calisma = new Calisma(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, 540);
         CizimFormu cF = new CizimFormu(calisma);
 
         bool ilkDeger_AtandiMi = false;
@@ -103,7 +103,14 @@ namespace Game_Bot
                 if (!P_BasildiMi)
                 {
                     Label_Sure.Text = "Çalışma Süresi: " + calisma.Calisma_Suresi_Hesapla();
-                    Label_Bilgi.Text = "Baslatmak için P tuşuna Basınız";
+                    Label_Bilgi.Text = "Durdurmak için P tuşuna Basınız";
+
+
+
+                    if (calisma.Haritada_Gemi_Bul())
+                    {
+                        Label_Bilgilendirme.Text = "Dusman Bulundu";
+                    }
 
                     if (Mouse_.P_Basildimi() != 0)
                     {
@@ -126,7 +133,7 @@ namespace Game_Bot
                     {
                         P_BasildiMi = false;
                     }
-                }
+                }   
             }
         }
 
